@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboHelper - Robotics Project Idea Chatbot</title>
+    <meta name="description" content="AI-powered chatbot that suggests robotics project ideas based on your available components.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="10" rx="2"/>
+                            <circle cx="8.5" cy="16" r="1.5"/>
+                            <circle cx="15.5" cy="16" r="1.5"/>
+                            <path d="M12 11V7"/>
+                            <circle cx="12" cy="5" r="2"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>RoboHelper</h1>
+                        <span>AI Project Assistant</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Quick Components</h3>
+                <div class="quick-chips" id="quickChips">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Try Asking</h3>
+                <div class="suggestion-list">
+                    <button class="suggestion-btn" onclick="sendSuggestion('I have Arduino Uno, ultrasonic sensor, and servo motor')">
+                        Arduino + Ultrasonic + Servo
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('I have Arduino, IR sensor, DC motor, and motor driver')">
+                        Arduino + IR + DC Motor
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('What can I build with Raspberry Pi and camera?')">
+                        Raspberry Pi + Camera
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('I have ESP8266, relay module, and DHT11 sensor')">
+                        ESP8266 + Relay + DHT11
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('I want to build a bluetooth controlled robot')">
+                        Bluetooth Robot
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="stats" id="stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="compCount">--</span>
+                        <span class="stat-label">Components</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="projCount">--</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+                <div class="top-bar-info">
+                    <h2>Chat with RoboHelper</h2>
+                    <span class="status-badge" id="statusBadge">
+                        <span class="status-dot"></span>
+                        Online
+                    </span>
+                </div>
+                <button class="clear-btn" id="clearChat" onclick="clearChat()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/>
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    New Chat
+                </button>
+            </header>
+
+            <!-- Chat Messages -->
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome message injected by JS -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Tell me your components... (e.g., I have Arduino, ultrasonic sensor, servo motor)"
+                        rows="1"
+                        maxlength="1000"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="input-hint">Press Enter to send, Shift+Enter for new line</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
