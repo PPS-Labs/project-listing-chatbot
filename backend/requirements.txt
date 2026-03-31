@@ -1,0 +1,6 @@
+django
+djangorestframework
+django-cors-headers
+scikit-learn
+numpy
+gunicorn

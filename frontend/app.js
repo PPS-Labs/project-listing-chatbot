@@ -2,7 +2,7 @@
 // RoboHelper - Chatbot Frontend Logic
 // ============================================
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = '/api';
 let sessionId = null;
 let isLoading = false;
 
@@ -479,10 +479,10 @@ function formatErrorMessage() {
         <br><br>
         Could not connect to the server. Please make sure:
         <br>
-        1. The Django backend is running on <code>http://127.0.0.1:8000</code>
+        1. Both Docker containers are running (<code>docker-compose up</code>)
         <br>
-        2. Run: <code>python manage.py runserver</code> in the backend folder
+        2. Access the app via <code>http://localhost:8080</code>
         <br><br>
-        <em>Then try sending your message again.</em>
+        <em>Then try refreshing or sending your message again.</em>
     `;
 }

@@ -1,129 +1,59 @@
-<<<<<<< HEAD
-# RoboHelper: AI-Powered Robotics Project Assistant
+# RoboHelper: Professional AI Robotics Assistant
 
-RoboHelper is a full-stack web application designed to help makers, students, and hobbyists discover robotics project ideas based on the components they have on hand. It features a modern chatbot interface where users can list their components (e.g., "I have an Arduino Uno, ultrasonic sensor, and servo motor") and receive intelligent, ML-driven project recommendations.
+RoboHelper is a production-ready, full-stack application that leverages Machine Learning to suggest robotics project ideas based on available electronics components.
 
 ---
 
 ## 🏗️ Architecture Overview
-=======
-# ProjectHelper: AI-Powered Robotics Project Assistant
 
-ProjectHelper is a full-stack web application designed to help makers, students, and hobbyists discover robotics project ideas based on the components they have on hand. It features a modern chatbot interface where users can list their components (e.g., "I have an Arduino Uno, ultrasonic sensor, and servo motor") and receive intelligent, ML-driven project recommendations.
+The system is fully containerized and architected for security and scalability:
 
----
-
-##  Architecture Overview
->>>>>>> 578b84577fee8978304a29d9ab8db4beedb60b64
-
-The project follows a decoupled architecture using a RESTful API:
-
-1.  **Backend (Django + Django REST Framework + SQLite)**:
-    *   Handles data storage for Components, Projects, and Chat Sessions.
-    *   Exposes API endpoints for chat interactions (`/api/chat/`), fetching components (`/api/components/`), and fetching projects (`/api/projects/`).
-    *   Houses the Machine Learning engine for parsing user input and ranking project recommendations.
-    *   Includes a custom management command (`seed_db`) to easily populate the database with a curated dataset of over 30 components and 20 robotics projects.
-
-2.  **Frontend (Vanilla JS + HTML/CSS)**:
-    *   A responsive, single-page application built without heavy frameworks for maximum performance and simplicity.
-    *   Features a premium dark theme with glassmorphism effects and smooth animations.
-    *   Communicates asynchronously with the backend API to send messages and render project recommendation cards dynamically.
+- **Frontend**: Vanilla JS SPA served via **Nginx**.
+- **Backend**: **Django REST Framework** handling ML logic and data management.
+- **Orchestration**: **Docker Compose** managing services, strictly routing all traffic through Nginx (Port 8080).
+- **Security**: Backend services are private to the Docker network; only the Nginx proxy is exposed to the host.
 
 ---
 
-## 🧠 Machine Learning Engine
+## 🚀 Quick Start with Docker
 
-The core of RoboHelper is its recommendation engine (`backend/robohelper/ml_engine.py`), which uses Natural Language Processing (NLP) techniques to understand user queries and find the best matching projects. 
+Ensure you have **Docker Desktop** installed.
 
-Here is how the ML pipeline works:
+### 1. Build and Launch
+From the root directory, run:
+```bash
+docker-compose up --build
+```
+This command automatically:
+- Builds optimized images.
+- Runs database migrations.
+- Starts both services in a connected network.
 
-### 1. Intent Detection
-When a message arrives, the system uses regular expressions and keyword matching to determine the user's intent. It distinguishes between:
-*   **Greetings** ("Hello", "Hi")
-*   **Help Requests** ("How does this work?")
-*   **Project Requests** ("I have...", "What can I build...")
-*   **Farewells** ("Goodbye")
-
-### 2. Entity Extraction (Component Resolution)
-If the user is asking for projects, the engine extracts the components they mentioned. 
-*   **Text Normalization**: The text is cleaned (lowercased, punctuation removed).
-*   **Alias Resolution**: The engine uses a comprehensive synonym dictionary (`COMPONENT_ALIASES`). For example, if a user types "sonar" or "hc-sr04", the system understands they mean "Ultrasonic Sensor HC-SR04". This makes the chatbot highly resilient to variations in how people name electronics.
-
-### 3. TF-IDF & Cosine Similarity Ranking
-Once the user's components are identified, the system ranks the available projects in the database to find the best matches:
-*   **Matching:** The engine checks how many of the project's required components match the user's provided components.
-*   **Scoring Logic:** A match score is calculated. 
-    *   **70% Weight**: The percentage of the *project's* components that the user has (Match Ratio).
-    *   **30% Weight**: A bonus for coverage (Coverage Bonus) to favor projects that utilize more of the components the user actually provided.
-*   **TF-IDF Fallback**: The code also includes a robust `TfidfVectorizer` (Term Frequency-Inverse Document Frequency) approach using `scikit-learn` to vectorize project descriptions and keywords, computing the **Cosine Similarity** against the user's input to find semantic matches even if direct component names aren't perfectly aligned.
+### 2. Access the Application
+- **Frontend Hub**: [http://localhost:8080](http://localhost:8080)
+- **API Browser**: [http://localhost:8080/api/](http://localhost:8080/api/)
+- **Admin Panel**: [http://localhost:8080/admin/](http://localhost:8080/admin/)
 
 ---
 
-## 🚀 Setup & Installation
+## ⚠️ Important Notes
 
-### Requirements
-*   Python 3.8+
-*   (Optional but recommended) Virtual Environment
+### SQLite in Docker
+This project currently uses **SQLite** for simplicity. 
+> [!WARNING]
+> While convenient for development, SQLite has limitations in containerized production:
+> - **Concurrency**: Limited support for simultaneous writes.
+> - **Persistence**: Ensure the container has persistent volume mounts for the `db.sqlite3` file to avoid data loss.
+> - **Recommendation**: For production scaling, switch to **PostgreSQL**.
 
-### 1. Backend Setup
-
-Open a terminal and navigate to the `backend` directory:
-
-```bash
-cd backend
-```
-
-Install the required Python packages:
-
-```bash
-pip install django djangorestframework django-cors-headers scikit-learn nltk
-```
-
-Run database migrations to create the required tables:
-
-```bash
-python manage.py makemigrations robohelper
-python manage.py migrate
-```
-
-Seed the database with the initial dataset of components and projects:
-
-```bash
-python manage.py seed_db
-```
-
-Start the Django development server:
-
-```bash
-python manage.py runserver
-```
-
-The API will now be active at `http://127.0.0.1:8000/api/`. You can also access the Django Admin panel at `http://127.0.0.1:8000/admin/` to manage the data.
-
-### 2. Frontend Setup
-
-The frontend does not require traditional build steps (like Node.js/npm). It can be served using any simple static file server.
-
-Open a **new** terminal, navigate to the `frontend` directory:
-
-```bash
-cd frontend
-```
-
-Start a simple HTTP server using Python:
-
-```bash
-python -m http.server 3000
-```
-
-Open your web browser and navigate to `http://localhost:3000`. You can now start chatting with RoboHelper!
+### Windows Compatibility
+The setup is optimized for **Windows (WSL2)**. If you encounter line-ending issues with shell scripts, ensure your Git configuration handles `LF` correctly.
 
 ---
 
-## 🛠️ Built With
+## 🛠️ Scalability Recommendations
 
-*   **Django**: High-level Python web framework used for rapid backend development.
-*   **Django REST Framework (DRF)**: Toolkit for building Web APIs.
-*   **sqlite3**: Lightweight SQL database engine (default with Django).
-*   **scikit-learn**: Machine learning library for Python used for TF-IDF vectorization.
-*   **HTML5/CSS3/Vanilla JS**: For a fast, dependency-free frontend experience.
+1. **Database**: Migrate to **PostgreSQL** for robust data handling and concurrency.
+2. **WSGI Server**: Use **Gunicorn** or **Uvicorn** instead of the Django development server for handling production traffic.
+3. **Environment Variables**: Use `.env` files for secrets and configuration instead of hardcoding values in `settings.py`.
+4. **Static Files**: Use `collectstatic` and serve them via Nginx for better performance.
